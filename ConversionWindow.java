@@ -3,68 +3,62 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ConversionWindow extends JFrame {
+public class ConversionWindow {
+    public ConversionWindow(JFrame frame, String decimal, String binary, String hex) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(7, 1, 10, 10));
+        panel.setBackground(new Color(72, 61, 139));
 
-    public ConversionWindow(JFrame parent, JTextField txtDecimal, JTextField txtBinary, JTextField txtHex,
-            JTextArea txtOutput) {
-        setTitle("Options");
-        setSize(300, 200);
-        setLocationRelativeTo(parent);
-        setLayout(new GridLayout(0, 1));
+        JLabel lblConversions = new JLabel("Conversions", SwingConstants.CENTER);
+        lblConversions.setForeground(Color.WHITE);
+        lblConversions.setFont(new Font("Arial", Font.BOLD, 16));
 
-        JButton btnConversions = new JButton("Conversions");
-        JButton btnOnesComplement = new JButton("One's Complement");
-        JButton btnTwosComplement = new JButton("Two's Complement");
-        JButton btnBitwise = new JButton("Bitwise Operations");
+        JButton btnBinaryToDecimal = new JButton("Binary to Decimal: " + Integer.parseInt(binary, 2));
+        JButton btnBinaryToHex = new JButton(
+                "Binary to Hex: " + Integer.toHexString(Integer.parseInt(binary, 2)).toUpperCase());
+        JButton btnDecimalToBinary = new JButton(
+                "Decimal to Binary: " + Integer.toBinaryString(Integer.parseInt(decimal)));
+        JButton btnDecimalToHex = new JButton(
+                "Decimal to Hex: " + Integer.toHexString(Integer.parseInt(decimal)).toUpperCase());
+        JButton btnHexToDecimal = new JButton("Hex to Decimal: " + Integer.parseInt(hex, 16));
+        JButton btnHexToBinary = new JButton("Hex to Binary: " + Integer.toBinaryString(Integer.parseInt(hex, 16)));
 
-        add(btnConversions);
-        add(btnOnesComplement);
-        add(btnTwosComplement);
-        add(btnBitwise);
+        JButton btnBack = new JButton("Back");
 
-        btnConversions.addActionListener(e -> new ConversionsWindow(this, txtDecimal, txtBinary, txtHex, txtOutput));
-        btnOnesComplement.addActionListener(e -> performOnesComplement(txtDecimal, txtBinary, txtHex, txtOutput));
-        btnTwosComplement.addActionListener(e -> performTwosComplement(txtDecimal, txtBinary, txtHex, txtOutput));
-        // btnBitwise should be handled similarly
+        styleButton(btnBinaryToDecimal);
+        styleButton(btnBinaryToHex);
+        styleButton(btnDecimalToBinary);
+        styleButton(btnDecimalToHex);
+        styleButton(btnHexToDecimal);
+        styleButton(btnHexToBinary);
+        styleButton(btnBack);
 
-        setVisible(true);
+        panel.add(lblConversions);
+        panel.add(btnBinaryToDecimal);
+        panel.add(btnBinaryToHex);
+        panel.add(btnDecimalToBinary);
+        panel.add(btnDecimalToHex);
+        panel.add(btnHexToDecimal);
+        panel.add(btnHexToBinary);
+        panel.add(btnBack);
+
+        frame.setContentPane(panel);
+        frame.revalidate();
+
+        // Back button listener
+        btnBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new OptionsWindow(frame, decimal, binary, hex); // Back to options window
+            }
+        });
     }
 
-    private void performOnesComplement(JTextField txtDecimal, JTextField txtBinary, JTextField txtHex,
-            JTextArea txtOutput) {
-        try {
-            int decimal = Integer.parseInt(txtDecimal.getText());
-            String binary = txtBinary.getText();
-            String hex = txtHex.getText();
-
-            int bitLength = Math.max(binary.length(), 8);
-
-            txtOutput.append("One's Complement:\n");
-            txtOutput.append("Decimal: " + Operations.onesComplement(decimal, bitLength) + "\n");
-            txtOutput.append("Binary: " + Operations.onesComplement(Integer.parseInt(binary, 2), bitLength) + "\n");
-            txtOutput.append("Hexadecimal: " + Operations.onesComplement(Integer.parseInt(hex, 16), bitLength) + "\n");
-
-        } catch (NumberFormatException ex) {
-            txtOutput.append("Error: Invalid input for one's complement.\n");
-        }
-    }
-
-    private void performTwosComplement(JTextField txtDecimal, JTextField txtBinary, JTextField txtHex,
-            JTextArea txtOutput) {
-        try {
-            int decimal = Integer.parseInt(txtDecimal.getText());
-            String binary = txtBinary.getText();
-            String hex = txtHex.getText();
-
-            int bitLength = Math.max(binary.length(), 8);
-
-            txtOutput.append("Two's Complement:\n");
-            txtOutput.append("Decimal: " + Operations.twosComplement(decimal, bitLength) + "\n");
-            txtOutput.append("Binary: " + Operations.twosComplement(Integer.parseInt(binary, 2), bitLength) + "\n");
-            txtOutput.append("Hexadecimal: " + Operations.twosComplement(Integer.parseInt(hex, 16), bitLength) + "\n");
-
-        } catch (NumberFormatException ex) {
-            txtOutput.append("Error: Invalid input for two's complement.\n");
-        }
+    // Method to style buttons
+    private void styleButton(JButton button) {
+        button.setBackground(new Color(30, 144, 255));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Tahoma", Font.BOLD, 12));
     }
 }
